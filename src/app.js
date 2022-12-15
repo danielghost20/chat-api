@@ -9,6 +9,7 @@ const initModels = require('./models/initModels')
 const userRouter = require('./users/users.router')
 const authRouter = require('./auth/auth.router')
 const conversationRouter = require('./conversations/conversations.router')
+const messageRouter = require('./messages/messages.router')
 
 //? Initial Configs
 
@@ -36,7 +37,10 @@ app.get('/', (req, res) => {
         status: 200,
         message: 'Ok!',
         routes: {
-            users: ""
+            users: "/api/v1/users",
+            login: "/api/v1/auth/login",
+            conversations: "/api/v1/conversations",
+            messages: "/api/v1/conversations/messages"
         }
     })
 })
@@ -44,6 +48,8 @@ app.get('/', (req, res) => {
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/auth', authRouter)
 app.use('/api/v1/conversations', conversationRouter)
+app.use('/api/v1/conversations', messageRouter)
+
 
 app.listen(config.api.port, () => {
     console.log(`Server started on ${config.api.host}`)

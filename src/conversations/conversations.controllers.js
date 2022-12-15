@@ -41,16 +41,64 @@ const createConversation = async (obj) => {
     }
 }
 
+const findConversationById = async(id) => {
+    const data = await Conversations.findOne({
+        attributes: {
+            exclude: ['userId', 'createdAt', 'updatedAt']
+        },
+        where: {
+            id: id
+        },
+        include: [
+            {
+                model: Users,
+                attributes: {
+                    exclude: ['email', 'password','createdAt', 'updatedAt']
+                }
+            },
 
-//* createConversation({
-//*     title: 'Conversacion Sahid - Evertz',//? Titulo del chat
-//*     ownerId: 'db8b69e8-3233-43a0-a0b1-87774ffc8566', //? Evertz como owner
-//*     participantId: 'c4a8c88d-37a8-4c38-b251-8cef07c33145' //? Sahid como invitado
-//* })
-//* .then(data => console.log(data))
-//* .catch(err => console.log(err))
+            {
+                model: Participants,
+                attributes: {
+                    exclude: ['conversationId', 'userId', 'createdAt', 'updatedAt']
+                },
+
+                include: [
+                    {
+                        model: Users,
+                        attributes: {
+                        exclude: ['email', 'password','createdAt', 'updatedAt']
+                }
+                    }
+                ]
+            }
+        ]
+    })
+    return data
+}
+
+const deleteConversationById = async(id) => {
+    const data = await Conversations.destroy({
+        where: {
+            id: id
+        }
+    })
+    return data
+}
+
+const updateConversation = async(id, obj) => {
+    const data = await Conversations.update(obj, {
+        where: {
+            id: id
+        }
+    })
+    return data[0]
+}
 
 module.exports = {
     findAllConversations,
-    createConversation
+    createConversation,
+    findConversationById,
+    deleteConversationById,
+    updateConversation
 }
